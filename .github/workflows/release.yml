@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Existing immutable release tag (e.g. v1.0.0)'
+        description: "Existing immutable release tag (e.g. v1.0.0)"
         required: true
 
 permissions:
@@ -40,6 +40,7 @@ jobs:
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
           permission-actions: write
           permission-contents: write
+          permission-workflows: write
 
       - name: Require bot token
         env:
@@ -47,7 +48,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "${BOT_TOKEN}" ]; then
-            echo "::error::Failed to mint kubevirt-plugin-bot installation token. Check org secrets BOT_APP_ID and BOT_APP_PRIVATE_KEY and that the App is installed on this repository with Contents write."
+            echo "::error::Failed to mint kubevirt-plugin-bot installation token. Check org secrets BOT_APP_ID and BOT_APP_PRIVATE_KEY and that the App is installed on this repository with Contents + Workflows write."
             exit 1
           fi
 
