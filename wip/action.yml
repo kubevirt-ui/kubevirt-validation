@@ -1,0 +1,49 @@
+name: WIP / draft validation
+description: Block merge when the PR title is WIP/Draft or the PR is a GitHub draft
+inputs:
+  pr-number:
+    description: Pull request number
+    required: true
+  pr-title:
+    description: Pull request title
+    required: true
+  pr-is-draft:
+    description: Set to true when the pull request is a GitHub draft
+    required: true
+  repo-owner:
+    description: Repository owner
+    required: false
+    default: ${{ github.repository_owner }}
+  repo-name:
+    description: Repository name
+    required: false
+    default: ${{ github.event.repository.name }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: npm
+        cache-dependency-path: ${{ github.action_path }}/../package-lock.json
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ github.action_path }}/..
+      run: npm ci
+
+    - name: Run WIP / draft validation
+      shell: bash
+      working-directory: ${{ github.action_path }}/..
+      env:
+        BOT_TOKEN: ${{ env.BOT_TOKEN }}
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        STATUS_GITHUB_TOKEN: ${{ env.STATUS_GITHUB_TOKEN }}
+        REPO_OWNER: ${{ inputs.repo-owner }}
+        REPO_NAME: ${{ inputs.repo-name }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+        PR_TITLE: ${{ inputs.pr-title }}
+        PR_IS_DRAFT: ${{ inputs.pr-is-draft }}
+      run: npx tsx src/run-wip-validation.ts
