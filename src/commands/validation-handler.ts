@@ -22,6 +22,8 @@ export const executeValidationCommand = async (ctx: CommandContext): Promise<voi
   process.env.BASE_BRANCH = pullRequest.base.ref;
   process.env.PR_HEAD_SHA = pullRequest.head.sha;
   process.env.PR_AUTHOR = pullRequest.user?.login ?? '';
+  process.env.REPO_OWNER = ctx.owner;
+  process.env.REPO_NAME = ctx.repo;
 
   await runValidationCommands();
 };

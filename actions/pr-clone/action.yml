@@ -35,6 +35,8 @@ runs:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         JIRA_TOKEN: ${{ env.JIRA_TOKEN }}
         GITHUB_REPOSITORY: ${{ github.repository }}
+        REPO_OWNER: ${{ github.repository_owner }}
+        REPO_NAME: ${{ github.event.repository.name }}
         PR_NUMBER: ${{ inputs.pr-number }}
         COMMENT_ID: ${{ inputs.comment-id }}
         COMMENT_BODY: ${{ inputs.comment-body }}
