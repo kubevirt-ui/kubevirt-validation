@@ -177,7 +177,27 @@ export const setCommitStatus = async (
   });
 };
 
-/** Update the validation comment and add/remove the block label based on result. */
+/** Update a gate comment and add/remove its block label. */
+export const reportGateResult = async (
+  octokit: Octokit,
+  owner: string,
+  repo: string,
+  prNumber: number,
+  passed: boolean,
+  commentBody: string,
+  marker: string,
+  blockLabel: string,
+): Promise<void> => {
+  await upsertComment(octokit, owner, repo, prNumber, marker, commentBody);
+
+  if (passed) {
+    await removeLabel(octokit, owner, repo, prNumber, blockLabel);
+  } else {
+    await addLabel(octokit, owner, repo, prNumber, blockLabel);
+  }
+};
+
+/** Update the Jira validation comment and add/remove the Jira block label. */
 export const reportValidation = async (
   octokit: Octokit,
   owner: string,
@@ -186,11 +206,14 @@ export const reportValidation = async (
   passed: boolean,
   commentBody: string,
 ): Promise<void> => {
-  await upsertComment(octokit, owner, repo, prNumber, VALIDATION_COMMENT_MARKER, commentBody);
-
-  if (passed) {
-    await removeLabel(octokit, owner, repo, prNumber, BLOCK_LABEL);
-  } else {
-    await addLabel(octokit, owner, repo, prNumber, BLOCK_LABEL);
-  }
+  await reportGateResult(
+    octokit,
+    owner,
+    repo,
+    prNumber,
+    passed,
+    commentBody,
+    VALIDATION_COMMENT_MARKER,
+    BLOCK_LABEL,
+  );
 };

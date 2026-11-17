@@ -17,6 +17,8 @@ export {
   UNSET_JIRA_PRIORITY_NAMES,
   SKIP_LABEL,
   VALIDATION_COMMENT_MARKER,
+  WIP_BLOCK_LABEL,
+  WIP_VALIDATION_COMMENT_MARKER,
 } from './config';
 export type {
   DiscoveredFields,
